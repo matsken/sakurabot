@@ -1,4 +1,6 @@
 var config = require("./config");
+var FeedParser = require("feedparser");
+var http = require("http");
 
 function dhms(ts) {
 	var ms = ts % 1000;
@@ -40,6 +42,27 @@ var handler = function(bot) {
 			}).join("\n");
 			
 			bot.sendMessage(text, message.channel);
+		},
+		
+		tired: function(message) {
+			bot.sendMessage("@matsken: お疲れの方がいるようです", message.channel);
+		},
+		
+		weather: function(message) {
+			var text, ep = [], count = 0;
+			http.get("http://rss.weather.yahoo.co.jp/rss/days/12.xml", function(res) {
+				res.pipe(new FeedParser({})).on("error", function(e) {
+						text = e.toString();
+					}).on("readable", function() {
+						var stream = this, item;
+						while (item = stream.read()) {
+							if (item.title.indexOf("北西部") > -1) {
+								bot.sendMessage(item.title, message.channel);
+								break;
+							}
+						}
+					});
+			});
 		}
 	}
 }

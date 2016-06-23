@@ -21,6 +21,10 @@ bot.on(EVENTS.MESSAGE, function(data) {
 			handler.anniversary(data);
 		} else if (text === "誕生日" || text.toLowerCase() === "birthday") {
 			handler.birthday(data);
+		} else if (text.indexOf("疲れた") > -1) {
+			handler.tired(data);
+		} else if (text.indexOf("天気") > -1) {
+			handler.weather(data);
 		}
 	}
 });
