@@ -1,0 +1,24 @@
+{
+  "name": "sakurabot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "@slack/client": "^3.5.0",
+    "feedparser": "^1.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matsken/sakurabot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matsken/sakurabot/issues"
+  },
+  "homepage": "https://github.com/matsken/sakurabot#readme"
+}
