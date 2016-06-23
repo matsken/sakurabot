@@ -57,7 +57,9 @@ var handler = function(bot) {
 						var stream = this, item;
 						while (item = stream.read()) {
 							if (item.title.indexOf("北西部") > -1) {
-								bot.sendMessage(item.title, message.channel);
+								var date = new Date(item.pubDate);
+								dateStr = date.getMonth() + "/" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+								bot.sendMessage(item.title + " " + dateStr, message.channel);
 								break;
 							}
 						}
