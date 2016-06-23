@@ -12,17 +12,19 @@ function dhms(ts) {
 	return [d, h, m, s, ms];
 }
 
+function getNextDiff(ref, target) {
+	var y = target.getYear() - 0;
+	while (target < ref) {
+		target.setYear(y++);
+	}
+	return dhms(target - ref);
+}
+
 var handler = function(bot) {
 	return {
 		anniversary: function(message) {
 			var aniv = new Date(config.anniversary);
-			var today = new Date();
-			var y = aniv.getYear() - 0;
-			while (today > aniv) {
-				aniv.setYear(y++);
-			}
-			var diff = aniv - today;
-			var [d, h, m, s, ms] = dhms(diff);
+			var [d, h, m, s, ms] = getNextDiff(new Date(), aniv);
 			
 			bot.sendMessage("Due in " + d + " days " + h + "h" + m + "m" + s + "s", message.channel);
 		},
@@ -32,14 +34,9 @@ var handler = function(bot) {
 			
 			var text = config.birthdays.map(function(obj) {
 				var bd = new Date(obj.date);
-				var name = obj.name;
 				
-				var y = bd.getYear() - 0;
-				while (today > bd) {
-					bd.setYear(y++); 
-				}
-				var [d, h, m, s, ms] = dhms(bd - today);
-				return name + ": in " + d + " days";
+				var [d, h, m, s, ms] = getNextDiff(today, bd);
+				return obj.name + ": in " + d + " days";
 			}).join("\n");
 			
 			bot.sendMessage(text, message.channel);
