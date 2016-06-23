@@ -49,20 +49,22 @@ var handler = function(bot) {
 		},
 		
 		weather: function(message) {
-			var text, ep = [], count = 0;
-			http.get("http://rss.weather.yahoo.co.jp/rss/days/12.xml", function(res) {
+			var text, ep = [];
+			http.get("http://rss.weather.yahoo.co.jp/rss/days/4510.xml", function(res) {
 				res.pipe(new FeedParser({})).on("error", function(e) {
-						text = e.toString();
+						bot.sendMessage(e.toString(), message.channel);
 					}).on("readable", function() {
 						var stream = this, item;
 						while (item = stream.read()) {
-							if (item.title.indexOf("北西部") > -1) {
-								var date = new Date(item.pubDate);
-								dateStr = date.getMonth() + "/" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
-								bot.sendMessage(item.title + " " + dateStr, message.channel);
-								break;
-							}
+							ep.push(item);
 						}
+					}).on("end", function() {
+						text = ep.map(item => {
+							var date = new Date(item.pubDate);
+							dateStr = date.getMonth() + "/" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+							return item.title + " (" + dateStr + ")";
+						}).join("\n");
+						bot.sendMessage(text, message.channel);
 					});
 			});
 		}
