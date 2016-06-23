@@ -23,7 +23,7 @@ bot.on(EVENTS.MESSAGE, function(data) {
 			handler.birthday(data);
 		} else if (text.indexOf("疲れた") > -1) {
 			handler.tired(data);
-		} else if (text.indexOf("天気") > -1) {
+		} else if (text.indexOf("天気") > -1 || text.toLowerCase().indexOf("weather") > -1) {
 			handler.weather(data);
 		}
 	}

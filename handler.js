@@ -49,8 +49,9 @@ var handler = function(bot) {
 		},
 		
 		weather: function(message) {
-			var text, ep = [];
-			http.get("http://rss.weather.yahoo.co.jp/rss/days/4510.xml", function(res) {
+			config.weatherRSS.forEach(url => {
+				var text, ep = [];
+				http.get(url, function(res) {
 				res.pipe(new FeedParser({})).on("error", function(e) {
 						bot.sendMessage(e.toString(), message.channel);
 					}).on("readable", function() {
@@ -66,6 +67,7 @@ var handler = function(bot) {
 						}).join("\n");
 						bot.sendMessage(text, message.channel);
 					});
+				});
 			});
 		}
 	}
