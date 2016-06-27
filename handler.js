@@ -45,7 +45,7 @@ var handler = function(bot) {
 		},
 		
 		tired: function(message) {
-			bot.sendMessage("@matsken: お疲れの方がいるようです", message.channel);
+			bot.sendMessage("お疲れの方がいるようです", message.channel);
 		},
 		
 		weather: function(message) {
