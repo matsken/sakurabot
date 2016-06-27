@@ -68,7 +68,7 @@ var rules = [{
 	}
 }, {
 	condition: function(message) {
-		return message.type === "message" && message.attachments[0] && message.attachments[0].pretext.indexOf("[sakurabot:master]") > -1;
+		return message.type === "message" && message.attachments && message.attachments[0] && message.attachments[0].pretext.indexOf("[sakurabot:master]") > -1;
 	},
 	action: function(message, bot) {
 		bot.sendMessage("Update detected on Github, executing update - brb.");
