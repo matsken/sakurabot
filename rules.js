@@ -1,4 +1,5 @@
 var config = require("./config");
+var spawn = require("child_process").spawn;
 
 var rules = [{
 	// 記念日
