@@ -71,7 +71,7 @@ var rules = [{
 		return message.type === "message" && message.attachments && message.attachments[0] && message.attachments[0].pretext.indexOf("[sakurabot:master]") > -1;
 	},
 	action: function(message, bot) {
-		bot.sendMessage("Update detected on Github, executing update - brb.");
+		bot.sendMessage("Update detected on Github, executing update - brb.", message.channel);
 		updateBot();
 	}
 }];
@@ -79,12 +79,14 @@ var rules = [{
 var currentProcess = null;
 
 function updateBot() {
-	spawn("git", ["pull"]);
-	spawn("npm", ["install"]);
-	if (currentProcess) {
-		currentProcess.kill();
-	}
-	currentProcess = child_process.spawn("node", ["app.js"]);
+	spawn("git", ["pull"]).on("close", function() {
+		spawn("npm", ["install"]).on("close", function() {
+			if (currentProcess) {
+				currentProcess.kill();
+			}
+			currentProcess = child_process.spawn("node", ["app.js"]);
+		});
+	});
 }
 
 function dhms(ts) {
