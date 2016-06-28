@@ -1,11 +1,14 @@
 var config = require("./config");
-var spawn = require("child_process").spawn;
+var cp = require("child_process");
+var http = require("http");
+var FeedParser = require("feedparser");
+var exec = cp.exec;
 
 var rules = [{
 	// 記念日
 	condition: function(message) {
 		var text = message.text;
-		return message.type === "message" && (text === "記念日" || text.toLowerCase() === "anniversary");
+		return text && message.type === "message" && (text === "記念日" || text.toLowerCase() === "anniversary");
 	},
 	action: function(message, bot) {
 		var aniv = new Date(config.anniversary);
@@ -17,9 +20,9 @@ var rules = [{
 	// 誕生日
 	condition: function(message) {
 		var text = message.text;
-		return message.type === "message" && (text === "誕生日" || text.toLowerCase() === "birthday");
+		return text && message.type === "message" && (text === "誕生日" || text.toLowerCase() === "birthday");
 	},
-	action: function(message) {
+	action: function(message, bot) {
 		var today = new Date();
 		var text = config.birthdays.map(function(obj) {
 			var bd = new Date(obj.date);
@@ -34,9 +37,9 @@ var rules = [{
 	// 天気
 	condition: function(message) {
 		var text = message.text;
-		return message.type === "message" && (text === "天気" || text.toLowerCase() === "weather");
+		return text && message.type === "message" && (text === "天気" || text.toLowerCase() === "weather");
 	},
-	action: function(message) {
+	action: function(message, bot) {
 		config.weatherRSS.forEach(url => {
 			var text, ep = [];
 			http.get(url, function(res) {
@@ -50,7 +53,7 @@ var rules = [{
 				}).on("end", function() {
 					text = ep.map(item => {
 						var date = new Date(item.pubDate);
-						dateStr = date.getMonth() + "/" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+						dateStr = (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
 						return item.title + " (" + dateStr + ")";
 					}).join("\n");
 					bot.sendMessage(text, message.channel);
@@ -64,31 +67,10 @@ var rules = [{
 		var text = message.text;
 		return message.type === "message" && text === "疲れた";
 	},
-	action: function(message) {
-		bot.sendMessage("@matsken: お疲れの方がいるようです", message.channel);
-	}
-}, {
-	condition: function(message) {
-		return message.type === "message" && message.attachments && message.attachments[0] && message.attachments[0].pretext.indexOf("[sakurabot:master]") > -1;
-	},
 	action: function(message, bot) {
-		bot.sendMessage("Update detected on Github, executing update - brb.", message.channel);
-		updateBot();
+		bot.sendMessage("<@" + message.user + "> :heart:", message.channel);
 	}
 }];
-
-var currentProcess = null;
-
-function updateBot() {
-	spawn("git", ["pull"]).on("close", function() {
-		spawn("npm", ["install"]).on("close", function() {
-			if (currentProcess) {
-				currentProcess.kill();
-			}
-			currentProcess = child_process.spawn("node", ["app.js"]);
-		});
-	});
-}
 
 function dhms(ts) {
 	var ms = ts % 1000;
