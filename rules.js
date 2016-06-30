@@ -65,10 +65,15 @@ var rules = [{
 	// 疲れた
 	condition: function(message) {
 		var text = message.text;
-		return message.type === "message" && text === "疲れた";
+		return message.type === "message" && text.indexOf("疲れた") > -1;
 	},
 	action: function(message, bot) {
-		bot.sendMessage("<@" + message.user + "> :heart:", message.channel);
+		var count = message.text.split("疲れた").length - 1;
+		var text = "";
+		for (var i = 0; i < count; i++) {
+			text += ":heart:";
+		}
+		bot.sendMessage("<@" + message.user + "> " + text, message.channel);
 	}
 }];
 
