@@ -65,7 +65,7 @@ var rules = [{
 	// 疲れた
 	condition: function(message) {
 		var text = message.text;
-		return message.type === "message" && text.indexOf("疲れた") > -1;
+		return text && message.type === "message" && text.indexOf("疲れた") > -1;
 	},
 	action: function(message, bot) {
 		var count = message.text.split("疲れた").length - 1;
