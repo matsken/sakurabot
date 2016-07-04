@@ -2,13 +2,20 @@ var slack = require("@slack/client");
 var Client = slack.RtmClient;
 var EVENTS = slack.RTM_EVENTS;
 var config = require("./config");
-var handler = require("./handler");
+var rules = require("./rules");
 
 var apiToken = config.api_token;
 
 var bot = new Client(apiToken);
 
-var handler = handler.init(bot);
+bot.on(EVENTS.MESSAGE, function(data) {
+	console.log(data);
+	rules.forEach(rule => {
+		if (rule.condition(data)) {
+			rule.action(data, bot);
+		}
+	});
+});
 
 bot.start();
 bot.on(slack.CLIENT_EVENTS.RTM.AUTHENTICATED, function(data) {
