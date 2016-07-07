@@ -21,7 +21,7 @@ bot.on(slack.CLIENT_EVENTS.RTM.AUTHENTICATED, function(data) {
 	console.log("connected");
 });
 bot.on(slack.CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function(data) {
-	bot.sendMessage("Bot started and initialized", "C1KGES7L2");
+	bot.sendMessage("Bot started and initialized", config.bot_channel_id);
 	console.log("bot started");
 });
 
