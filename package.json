@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "@slack/client": "^3.5.0",
+    "cheerio": "^0.20.0",
     "feedparser": "^1.1.4"
   },
   "devDependencies": {},

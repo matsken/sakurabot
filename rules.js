@@ -2,6 +2,8 @@ var config = require("./config");
 var cp = require("child_process");
 var http = require("http");
 var FeedParser = require("feedparser");
+var cheerio = require("cheerio");
+var request = require("request");
 var exec = cp.exec;
 
 var rules = [{
@@ -74,6 +76,26 @@ var rules = [{
 			text += ":heart:";
 		}
 		bot.sendMessage("<@" + message.user + "> " + text, message.channel);
+	}
+}, {
+	condition: function(message) {
+		var text = message.text || "";
+		if (text.indexOf("<@U1KFRCXMJ>") > -1) {
+			text = text.replace("<@U1KFRCXMJ>", "").trim();
+			if (text === "レシピ" || text === "recipe") {
+				return true;
+			}
+		}
+		return false;
+	},
+	action: function(message, bot) {
+		request("http://cookpad.com", function(e, res, html) {
+			var $ = cheerio.load(html);
+			var link = $(".pickup_recipe").attr("href");
+			link = "http://cookpad.com" + (link || "");
+			var text = "今日のおすすめレシピはこちらです " + link;
+			bot.sendMessage(text, message.channel);
+		});
 	}
 }];
 
