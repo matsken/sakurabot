@@ -82,6 +82,9 @@ var rules = [{
 		var text = message.text || "";
 		if (text.indexOf("<@U1KFRCXMJ>") > -1) {
 			text = text.replace("<@U1KFRCXMJ>", "").trim();
+			if (text && text[0] === ":") {
+				text = text.replace(":", "").trim();
+			}
 			if (text === "レシピ" || text === "recipe") {
 				return true;
 			}
