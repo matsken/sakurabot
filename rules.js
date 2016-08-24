@@ -78,6 +78,7 @@ var rules = [{
 		bot.sendMessage("<@" + message.user + "> " + text, message.channel);
 	}
 }, {
+	// レシピ
 	condition: function(message) {
 		var text = message.text || "";
 		if (text.indexOf("<@U1KFRCXMJ>") > -1) {
